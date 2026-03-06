@@ -12,6 +12,8 @@ import (
 	"go.mongodb.org/mongo-driver/v2/mongo/readpref"
 )
 
+var TaskCollection *mongo.Collection
+
 func Connect() {
 	err := godotenv.Load()
 	if err != nil {
@@ -24,14 +26,19 @@ func Connect() {
 		panic(err)
 	}
 
-	defer func() {
-		if err = client.Disconnect(context.TODO()); err != nil {
-			panic(err)
-		}
-	}()
+	// defer func() {
+	// 	if err = client.Disconnect(context.TODO()); err != nil {
+	// 		panic(err)
+	// 	}
+	// }()
 
 	if err := client.Ping(context.TODO(), readpref.Primary()); err != nil {
 		panic(err)
 	}
+
+	db := client.Database("task-db")
+
+	TaskCollection = db.Collection("tasks")
+
 	fmt.Println("MongoDB Connect Succesfully!")
 }
