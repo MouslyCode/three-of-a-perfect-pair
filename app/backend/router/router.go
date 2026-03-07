@@ -10,5 +10,5 @@ func Routes(r *gin.Engine) {
 	r.POST("/", controller.CreateTask)
 	r.DELETE("/:id", controller.DeleteTask)
 	r.PUT("/:id", controller.UpdateTask)
-	r.PUT("/:id", controller.CompletedTask)
+	r.PUT("/complete/:id", controller.CompletedTask)
 }

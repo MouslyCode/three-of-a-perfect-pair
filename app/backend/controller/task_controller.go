@@ -7,6 +7,8 @@ import (
 	"github.com/MouslyCode/three-of-a-perfect-pair/backend/database"
 	"github.com/MouslyCode/three-of-a-perfect-pair/backend/model"
 	"github.com/gin-gonic/gin"
+
+	// "go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
@@ -30,7 +32,7 @@ func CreateTask(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, gin.H{
 		"Message": "Task Created Succesfully",
-		"Data":    response,
+		"id":      response.InsertedID,
 	})
 
 }
@@ -103,6 +105,7 @@ func DeleteTask(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Task Deleted",
 	})
+
 }
 
 func GetTasks(ctx *gin.Context) {
@@ -113,7 +116,7 @@ func GetTasks(ctx *gin.Context) {
 	}
 	defer cursor.Close(ctx.Request.Context())
 
-	var tasks []model.Task
+	var tasks []bson.D
 	if err = cursor.All(ctx.Request.Context(), &tasks); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
