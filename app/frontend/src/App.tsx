@@ -1,34 +1,44 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import TaskInput from "./components/TaskInput"
+import TaskList from "./components/TaskList"
 import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+type Task = {
+  id: string
+  title: string
+  completed: boolean
+}
 
+function App() {
+  const [tasks, setTasks] = useState<Task[]>([])
+
+  const addTask = (title: string) => {
+    const newTask: Task = {
+      id: crypto.randomUUID(),
+      title,
+      completed: false,
+    }
+
+    setTasks([...tasks, newTask])
+  }
+
+  const toggleTask = (id: string) => {
+    const updated = tasks.map((task) =>
+      task.id === id
+        ? { ...task, completed: !task.completed }
+        : task
+    )
+
+    setTasks(updated)
+  }
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div style={{ maxWidth: "500px", margin: "40px auto" }}>
+      <h1>Perfect Task</h1>
+
+      <TaskInput onAdd={addTask} />
+
+      <TaskList tasks={tasks} onToggle={toggleTask} />
+    </div>
   )
 }
 
