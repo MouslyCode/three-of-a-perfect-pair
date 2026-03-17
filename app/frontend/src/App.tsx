@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import TaskInput from "./components/TaskInput"
 import TaskList from "./components/TaskList"
+import { getTasks, createTask, toggleTask } from './services/api'
 import './App.css'
 
 type Task = {
@@ -12,32 +13,31 @@ type Task = {
 function App() {
   const [tasks, setTasks] = useState<Task[]>([])
 
-  const addTask = (title: string) => {
-    const newTask: Task = {
-      id: crypto.randomUUID(),
-      title,
-      completed: false,
-    }
+  useEffect(() => {
+    fetchTasks()
+  }, [])
 
-    setTasks([...tasks, newTask])
+  const fetchTasks = async () => {
+    const data = await getTasks()
+    setTasks(data)
   }
 
-  const toggleTask = (id: string) => {
-    const updated = tasks.map((task) =>
-      task.id === id
-        ? { ...task, completed: !task.completed }
-        : task
-    )
+  const addTask = async (title: string) => {
+    await createTask(title)
+    fetchTasks()
+  }
 
-    setTasks(updated)
+  const handleToggle = async (id: string) => {
+    await toggleTask(id)
+    fetchTasks()
   }
   return (
     <div style={{ maxWidth: "500px", margin: "40px auto" }}>
-      <h1>Perfect Task</h1>
+      <h1>Task List</h1>
 
       <TaskInput onAdd={addTask} />
 
-      <TaskList tasks={tasks} onToggle={toggleTask} />
+      <TaskList tasks={tasks} onToggle={handleToggle} />
     </div>
   )
 }
