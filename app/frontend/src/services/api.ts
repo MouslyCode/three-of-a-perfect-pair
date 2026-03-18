@@ -6,7 +6,7 @@ export async function getTasks() {
 }
 
 export async function createTask(title: string) {
-    const res = await fetch(`${BASE_URL}/tasks`, {
+    const res = await fetch(`${BASE_URL}/`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -17,14 +17,14 @@ export async function createTask(title: string) {
 }
 
 export async function toggleTask(id: string) {
-    const res = await fetch(`${BASE_URL}/tasks/${id}`, {
+    const res = await fetch(`${BASE_URL}/complete/${id}`, {
         method: "PATCH",
     })
     return res.json()
 }
 
 export async function deleteTask(id: string) {
-    const res = await fetch(`${BASE_URL}/tasks/${id}`, {
+    const res = await fetch(`${BASE_URL}/${id}`, {
         method: "DELETE",
     })
     return res.json()
